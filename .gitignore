@@ -1,0 +1,100 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Logs
+*.log
+logs/
+*.out
+
+# Models
+models/saved/*.pkl
+models/saved/*.h5
+models/saved/*.joblib
+*.ckpt
+*.pth
+
+# Data
+data/*.csv
+data/*.json
+data/*.parquet
+!data/sample_transactions.csv
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# AWS
+.aws/
+*.pem
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Misc
+.cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json

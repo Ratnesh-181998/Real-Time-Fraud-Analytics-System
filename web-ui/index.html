@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Fraud Analytics Dashboard</title>
+    <meta name="description" content="Enterprise-grade real-time fraud detection and analytics dashboard">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-shield-halved"></i>
+                <span>Fraud Analytics</span>
+            </div>
+            <div class="header-stats">
+                <div class="stat-pill">
+                    <i class="fas fa-circle status-indicator"></i>
+                    <span>System Operational</span>
+                </div>
+                <div class="stat-pill">
+                    <i class="fas fa-clock"></i>
+                    <span id="uptime">Uptime: --</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="check">
+                    <i class="fas fa-search"></i>
+                    <span>Check Transaction</span>
+                </a>
+                <a href="#" class="nav-item" data-section="simulate">
+                    <i class="fas fa-play"></i>
+                    <span>Live Simulation</span>
+                </a>
+                <a href="#" class="nav-item" data-section="analytics">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="api-status">
+                    <div class="status-dot" id="apiStatus"></div>
+                    <span id="apiStatusText">Connecting...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="section-header">
+                    <h1>Real-Time Fraud Analytics</h1>
+                    <p>Monitor and detect fraudulent transactions in real-time</p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon blue">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-label">Total Transactions</div>
+                            <div class="metric-value" id="totalTransactions">0</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up"></i> Live
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon red">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-label">Fraud Detected</div>
+                            <div class="metric-value" id="fraudDetected">0</div>
+                            <div class="metric-change" id="fraudChange">
+                                <i class="fas fa-minus"></i> 0%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-label">Legitimate</div>
+                            <div class="metric-value" id="legitimateTransactions">0</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up"></i> Safe
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon purple">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-label">Avg Response Time</div>
+                            <div class="metric-value" id="avgResponseTime">--</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-bolt"></i> Real-time
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Fraud Detection Trend</h3>
+                            <div class="chart-controls">
+                                <button class="btn-icon active" data-range="1h">1H</button>
+                                <button class="btn-icon" data-range="24h">24H</button>
+                                <button class="btn-icon" data-range="7d">7D</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="fraudTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Risk Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="riskDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Recent Transactions</h3>
+                        <button class="btn-secondary" onclick="refreshTransactions()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Timestamp</th>
+                                    <th>Amount</th>
+                                    <th>Fraud Score</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No transactions yet. Start simulation to see data.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Check Transaction Section -->
+            <section id="check-section" class="content-section">
+                <div class="section-header">
+                    <h1>Check Transaction</h1>
+                    <p>Analyze a single transaction for fraud indicators</p>
+                </div>
+
+                <div class="form-card">
+                    <form id="checkTransactionForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="transactionId">Transaction ID</label>
+                                <input type="text" id="transactionId" placeholder="TXN123456" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="userId">User ID</label>
+                                <input type="text" id="userId" placeholder="USER001" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="merchantId">Merchant ID</label>
+                                <input type="text" id="merchantId" placeholder="MERCH001" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">Amount ($)</label>
+                                <input type="number" id="amount" placeholder="150.00" step="0.01" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="transactionType">Transaction Type</label>
+                                <select id="transactionType">
+                                    <option value="purchase">Purchase</option>
+                                    <option value="withdrawal">Withdrawal</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="refund">Refund</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="timestamp">Timestamp</label>
+                                <input type="datetime-local" id="timestamp">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-search"></i> Check for Fraud
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="generateRandomTransaction()">
+                                <i class="fas fa-random"></i> Generate Random
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Result Card -->
+                <div id="checkResult" class="result-card" style="display: none;">
+                    <div class="result-header">
+                        <h3>Analysis Result</h3>
+                        <button class="btn-icon" onclick="closeResult()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="result-content">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Simulation Section -->
+            <section id="simulate-section" class="content-section">
+                <div class="section-header">
+                    <h1>Live Transaction Simulation</h1>
+                    <p>Simulate real-time transaction stream for testing</p>
+                </div>
+
+                <div class="simulation-controls">
+                    <div class="control-card">
+                        <h3>Simulation Settings</h3>
+                        <div class="form-group">
+                            <label for="transactionRate">Transactions per Second</label>
+                            <input type="range" id="transactionRate" min="1" max="100" value="10">
+                            <span id="rateValue">10 TPS</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="fraudProbability">Fraud Probability (%)</label>
+                            <input type="range" id="fraudProbability" min="0" max="50" value="5">
+                            <span id="fraudProbValue">5%</span>
+                        </div>
+                        <div class="simulation-actions">
+                            <button id="startSimulation" class="btn-primary">
+                                <i class="fas fa-play"></i> Start Simulation
+                            </button>
+                            <button id="stopSimulation" class="btn-danger" style="display: none;">
+                                <i class="fas fa-stop"></i> Stop Simulation
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="simulation-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Transactions Generated</div>
+                            <div class="stat-value" id="simTransactions">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Fraud Simulated</div>
+                            <div class="stat-value" id="simFraud">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Processing Rate</div>
+                            <div class="stat-value" id="simRate">0 TPS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Feed -->
+                <div class="live-feed-card">
+                    <div class="feed-header">
+                        <h3>Live Transaction Feed</h3>
+                        <button class="btn-secondary" onclick="clearFeed()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <div class="feed-container" id="liveFeed">
+                        <div class="empty-state">
+                            <i class="fas fa-stream"></i>
+                            <p>Start simulation to see live transactions</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <div class="section-header">
+                    <h1>Advanced Analytics</h1>
+                    <p>Deep dive into fraud patterns and system performance</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <h3>Model Performance Comparison</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="modelComparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Processing Time Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="processingTimeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Fraud Score Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="fraudScoreChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h1>System Settings</h1>
+                    <p>Configure fraud detection parameters</p>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Model Configuration</h3>
+                        <div class="form-group">
+                            <label>XGBoost Weight</label>
+                            <input type="range" id="xgboostWeight" min="0" max="100" value="70">
+                            <span id="xgboostWeightValue">0.70</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Autoencoder Weight</label>
+                            <input type="range" id="autoencoderWeight" min="0" max="100" value="30">
+                            <span id="autoencoderWeightValue">0.30</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Fraud Threshold</label>
+                            <input type="range" id="fraudThreshold" min="0" max="100" value="50">
+                            <span id="fraudThresholdValue">0.50</span>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fas fa-save"></i> Save Configuration
+                        </button>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>System Information</h3>
+                        <div class="info-grid" id="systemInfo">
+                            <div class="info-item">
+                                <span class="info-label">API Version</span>
+                                <span class="info-value">1.0.0</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Models Loaded</span>
+                                <span class="info-value">2</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Features</span>
+                                <span class="info-value">50</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Users Tracked</span>
+                                <span class="info-value" id="usersTracked">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+</html>

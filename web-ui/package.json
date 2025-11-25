@@ -1,0 +1,19 @@
+{
+    "name": "fraud-analytics-dashboard",
+    "version": "1.0.0",
+    "description": "Real-Time Fraud Analytics Dashboard",
+    "main": "index.html",
+    "scripts": {
+        "start": "python -m http.server 3000",
+        "serve": "python -m http.server 3000"
+    },
+    "keywords": [
+        "fraud-detection",
+        "machine-learning",
+        "real-time",
+        "analytics",
+        "dashboard"
+    ],
+    "author": "Ratnesh",
+    "license": "MIT"
+}

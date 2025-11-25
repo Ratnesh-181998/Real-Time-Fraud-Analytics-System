@@ -1,0 +1,30 @@
+Real-Time Fraud Analytics System Design
+Introduction
+In this module, we explore designing a machine learning system specifically for real-time fraud analytics within fintech, focusing on transaction data due to its high volume nature. Such systems are built to handle large-scale data processing in real time, utilizing various AWS services for optimal performance.
+
+Key Concepts
+Data Streaming with Amazon Kinesis
+Kinesis Data Streams: This is used to ingest transactions at a high throughput, essential for capturing and processing up to 10,000 transactions per second【7:1†transcript.txt】.
+Sharding: You can configure Kinesis with shards; each shard provides 1MB/sec throughput or 1,000 records/sec. For instance, using four shards allows a capacity of 4MB/sec【7:0†transcript.txt】.
+Real-Time Data Processing
+Apache Flink: Used for real-time feature engineering, allowing user-level aggregation like rolling spend calculations【7:0†transcript.txt】.
+Kinesis Data Analytics: Facilitates real-time data processing and enrichment【7:1†transcript.txt】.
+Enriching Data
+DynamoDB: This is used for low latency lookups to enrich data with metadata, such as user or merchant names, when transactions only provide IDs【7:0†transcript.txt】【7:6†transcript.txt】.
+System Components
+Functional and Non-Functional Requirements: Always consider these at the onset of system design—functional requirements focus on what the system should do, while non-functional are about how the system performs.
+AWS Lambda and API Gateway: Utilized for creating real-time alert systems. When fraud scores exceed certain thresholds, these components can trigger notifications via Amazon SNS to alert relevant parties instantly【7:16†transcript.txt】.
+Designing for Scale and Efficiency
+Volume Considerations: System design must account for high transaction volumes to justify the need for real-time system design【7:19†transcript.txt】.
+Cost Efficiency: Awareness of configurations and how they impact cost, such as proper shard utilization in Kinesis, is crucial【7:16†transcript.txt】.
+Statistical Analysis for Model Evaluation
+t-Test and z-Test: Applied for hypothesis testing to check model performance or compare between models【7:16†transcript.txt】.
+A/B Testing: Used for validating changes in the model, ensuring the new setup outperforms the prior model【7:18†transcript.txt】.
+Fraud Detection and Model Deployment
+Modeling Framework: Incorporates supervised methods (e.g., XGBoost) and unsupervised methods (e.g., autoencoders) to detect anomalies. These models are deployed and monitored using Amazon SageMaker【7:8†transcript.txt】.
+Handling Drifts and Re-Training: Model performance is regularly checked to identify data drifts, which can trigger re-training for maintaining effectiveness【7:16†transcript.txt】.
+Metrics and Evaluation
+Precision vs. Recall: Precision is critical when false positives are costlier, while high recall is necessary when missing frauds poses significant risks【7:12†transcript.txt】【7:19†transcript.txt】.
+F1 Score: Often a key metric when balancing precision and recall to optimize fraud detection models【7:19†transcript.txt】.
+Conclusion
+Developing an ML system for real-time fraud analytics requires an understanding of both the technical components provided by AWS services and the data science techniques for processing and evaluating transaction data. Building such a system involves configuring data streaming, processing using Flink, enriching data through DynamoDB, and deploying models capable of real-time fraud detection while managing AWS resources effectively .
